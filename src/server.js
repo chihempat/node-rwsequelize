@@ -2,6 +2,8 @@ const express = require('express');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const morgan = require('morgan');
 
+const { db } = require('./models');
+
 const app = express();
 
 // user morgan
@@ -14,4 +16,12 @@ app.use(express.json());
 // routes
 app.use('/api', require('./routes/api'));
 
-app.listen(7788, () => console.log('Running on port 7788'));
+db.sync()
+  .then(() => {
+    app.listen(7788, () => {
+      console.log('Server Started on port 7788');
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+  });
